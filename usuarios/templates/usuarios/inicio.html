@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>EduControl - Inicio</title>
+</head>
+<body>
+
+    <h1>Bienvenido a EduControl</h1>
+
+    <p>Hola, {{ request.user.first_name }}</p>
+
+    {% if rol == 'ADMIN' %}
+
+        <h2>Panel de administrador</h2>
+        <p>Gestion de la plataforma</p>
+
+        <ul>
+            <li><a href="/admin/">Administrar sistema</a></li>
+        </ul>
+
+    {% elif rol == 'PROFESOR' %}
+
+        <h2>Panel de profesor</h2>
+
+        <ul>
+            <li>Mis grupos</li>
+            <li>Registrar asistencias</li>
+            <li>Consultar calendario</li>
+        </ul>
+
+    {% elif rol == 'ESTUDIANTE' %}
+
+        <h2>Panel de estudiante</h2>
+
+        <ul>
+            <li>Mis cursos</li>
+            <li>Consultar calendario</li>
+            <li>Consultar resultados</li>
+        </ul>
+
+    {% endif %}
+
+    <a href="{% url 'logout' %}">Cerrar sesion</a>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>EduControl - Curso</title>
+</head>
+<body>
+
+    <h1>
+        {% if curso %}
+            Editar curso
+        {% else %}
+            Registrar nuevo curso
+        {% endif %}
+    </h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Nombre del curso:</label>
+        <input type="text" name="nombre"
+               value="{{ curso.nombre|default:'' }}" required>
+        <br><br>
+
+        <label>Descripcion:</label>
+        <textarea name="descripcion">{{ curso.descripcion|default:'' }}</textarea>
+        <br><br>
+
+        <label>Duracion en horas:</label>
+        <input type="number" name="duracion_horas"
+               value="{{ curso.duracion_horas|default:'' }}"
+               min="1" required>
+        <br><br>
+
+        <button type="submit">Guardar curso</button>
+    </form>
+
+    <br>
+    <a href="{% url 'lista_cursos' %}">Volver a cursos</a>
+
+</body>
+</html>

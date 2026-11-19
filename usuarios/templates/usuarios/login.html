@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduControl - Iniciar sesion</title>
+</head>
+<body>
+
+    <h1>EduControl</h1>
+    <h2>Iniciar sesion</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Correo electronico</label>
+        <input type="email" name="email" required>
+
+        <label>Contrasena</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Ingresar</button>
+    </form>
+
+</body>
+</html>

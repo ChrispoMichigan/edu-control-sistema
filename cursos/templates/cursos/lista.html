@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>EduControl - Cursos</title>
+</head>
+<body>
+
+    <h1>Gestion de cursos</h1>
+
+    <a href="{% url 'crear_curso' %}">Registrar nuevo curso</a>
+
+    <h2>Cursos registrados</h2>
+
+    {% if cursos %}
+        <table border="1">
+            <tr>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Duracion (horas)</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+
+            {% for curso in cursos %}
+                <tr>
+                    <td>{{ curso.nombre }}</td>
+                    <td>{{ curso.descripcion }}</td>
+                    <td>{{ curso.duracion_horas }}</td>
+                    <td>
+                        {% if curso.activo %}
+                            Activo
+                        {% else %}
+                            Inactivo
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'editar_curso' curso.id %}">
+                            Editar
+                        </a>
+
+                        <form method="POST" action="{% url 'eliminar_curso' curso.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                onclick="return confirm('¿Estas seguro de eliminar este curso?')">
+                                Eliminar
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{% url 'cambiar_estado' curso.id %}">
+                            {% csrf_token %}
+                            <button type="submit">
+                                {% if curso.activo %}
+                                    Desactivar
+                                {% else %}
+                                    Activar
+                                {% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay cursos registrados.</p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'inicio' %}">Volver al inicio</a>
+
+</body>
+</html>
