@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>EduControl - Grupos</title>
+</head>
+<body>
+
+    <h1>Gestion de grupos</h1>
+
+    <a href="{% url 'crear_grupo' %}">Registrar nuevo grupo</a>
+
+    <h2>Grupos registrados</h2>
+
+    {% if grupos %}
+        <table border="1">
+            <tr>
+                <th>Nombre</th>
+                <th>Curso</th>
+                <th>Profesor</th>
+                <th>Capacidad</th>
+                <th>Fecha de inicio</th>
+                <th>Fecha de fin</th>
+                <th>Dias de clase</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+
+            {% for grupo in grupos %}
+                <tr>
+                    <td>{{ grupo.nombre }}</td>
+                    <td>{{ grupo.curso.nombre }}</td>
+                    <td>{{ grupo.profesor.usuario.first_name }} {{ grupo.profesor.usuario.last_name }}</td>
+                    <td>{{ grupo.capacidad }}</td>
+                    <td>{{ grupo.fecha_inicio }}</td>
+                    <td>{{ grupo.fecha_fin }}</td>
+                    <td>{{ grupo.dias_clase }}</td>
+                    <td>
+                        {% if grupo.activo %}
+                            Activo
+                        {% else %}
+                            Inactivo
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'editar_grupo' grupo.id %}">Editar</a>
+
+                        <form method="POST" action="{% url 'eliminar_grupo' grupo.id %}">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('¿Estas seguro de eliminar este grupo?')">
+                                Eliminar
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{% url 'cambiar_estado_grupo' grupo.id %}">
+                            {% csrf_token %}
+                            <button type="submit">
+                                {% if grupo.activo %}Desactivar{% else %}Activar{% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay grupos registrados.</p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'inicio' %}">Volver al inicio</a>
+
+</body>
+</html>

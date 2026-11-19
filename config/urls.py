@@ -27,4 +27,5 @@ urlpatterns = [
     path('inicio/', views.inicio_view, name='inicio'),
     path('cerrar-sesion/', views.logout_view, name='logout'),
     path('cursos/', include('cursos.urls')),
+    path('grupos/', include('grupos.urls')),
 ]

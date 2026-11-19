@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>EduControl - Grupo</title>
+</head>
+<body>
+
+    <h1>
+        {% if grupo %}
+            Editar grupo
+        {% else %}
+            Registrar nuevo grupo
+        {% endif %}
+    </h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Nombre del grupo:</label>
+        <input type="text" name="nombre" value="{{ grupo.nombre|default:'' }}" required>
+        <br><br>
+
+        <label>Curso:</label>
+        <select name="curso" required>
+            <option value="">Selecciona un curso</option>
+            {% for curso in cursos %}
+                <option value="{{ curso.id }}"
+                    {% if grupo.curso_id == curso.id %}selected{% endif %}>
+                    {{ curso.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label>Profesor:</label>
+        <select name="profesor" required>
+            <option value="">Selecciona un profesor</option>
+            {% for profesor in profesores %}
+                <option value="{{ profesor.id }}"
+                    {% if grupo.profesor_id == profesor.id %}selected{% endif %}>
+                    {{ profesor.usuario.first_name }} {{ profesor.usuario.last_name }}
+                </option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label>Capacidad:</label>
+        <input type="number" name="capacidad" min="1"
+                value="{{ grupo.capacidad|default:'' }}" required>
+        <br><br>
+
+        <label>Fecha de inicio:</label>
+        <input type="date" name="fecha_inicio"
+                value="{{ grupo.fecha_inicio|date:'Y-m-d' }}" required>
+        <br><br>
+
+        <label>Fecha de fin:</label>
+        <input type="date" name="fecha_fin"
+                value="{{ grupo.fecha_fin|date:'Y-m-d' }}" required>
+        <br><br>
+
+        <label>Dias de clase:</label>
+        <input type="text" name="dias_clase"
+                placeholder="Ejemplo: Lunes y Miercoles"
+                value="{{ grupo.dias_clase|default:'' }}" required>
+        <br><br>
+
+        <button type="submit">Guardar grupo</button>
+
+    </form>
+
+    <br>
+    <a href="{% url 'lista_grupos' %}">Volver a grupos</a>
+
+</body>
+</html>
