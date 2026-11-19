@@ -28,4 +28,5 @@ urlpatterns = [
     path('cerrar-sesion/', views.logout_view, name='logout'),
     path('cursos/', include('cursos.urls')),
     path('grupos/', include('grupos.urls')),
+    path('estudiantes/', include('estudiantes.urls')),
 ]

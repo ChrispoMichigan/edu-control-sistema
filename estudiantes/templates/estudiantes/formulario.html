@@ -1,0 +1,52 @@
+
+<h1>
+    {% if estudiante %}
+        Editar estudiante
+    {% else %}
+        Registrar estudiante
+    {% endif %}
+</h1>
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Nombre:</label>
+    <input type="text" name="first_name"
+           value="{{ estudiante.usuario.first_name|default:'' }}" required>
+    <br><br>
+
+    <label>Apellido:</label>
+    <input type="text" name="last_name"
+           value="{{ estudiante.usuario.last_name|default:'' }}" required>
+    <br><br>
+
+    <label>Correo electronico:</label>
+    <input type="email" name="email"
+           value="{{ estudiante.usuario.email|default:'' }}" required>
+    <br><br>
+
+    <label>Matricula:</label>
+    <input type="text" name="matricula"
+           value="{{ estudiante.matricula|default:'' }}" required>
+    <br><br>
+
+    <label>Telefono:</label>
+    <input type="text" name="telefono"
+           value="{{ estudiante.telefono|default:'' }}">
+    <br><br>
+
+    {% if not estudiante %}
+        <label>Contrasena:</label>
+        <input type="password" name="password" required>
+        <br><br>
+    {% endif %}
+
+    <button type="submit">Guardar</button>
+</form>
+
+<br>
+<a href="{% url 'lista_estudiantes' %}">Cancelar</a>
