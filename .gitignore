@@ -17,3 +17,6 @@ __pycache__/
 
 # Archivos de Visual Studio Code
 .vscode/
+
+.agents
+.claude

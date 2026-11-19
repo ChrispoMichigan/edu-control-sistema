@@ -1,48 +1,71 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Inicio{% endblock %}
+{% block page_title %}Inicio{% endblock %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>EduControl - Inicio</title>
-</head>
-<body>
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Bienvenido, {{ request.user.first_name }}</h1>
+        <p>Esto es lo que puedes hacer hoy en EduControl.</p>
+    </div>
+</div>
 
-    <h1>Bienvenido a EduControl</h1>
+{% if rol == 'ADMIN' %}
+<div class="card enter">
+    <h2>Panel de administración</h2>
+    <p>Gestiona cursos, grupos y estudiantes del centro de capacitación.</p>
+    <div class="form-actions" style="flex-wrap: wrap;">
+        <a class="btn btn-outline" href="{% url 'lista_cursos' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-book"/></svg>
+            Cursos
+        </a>
+        <a class="btn btn-outline" href="{% url 'lista_grupos' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-users"/></svg>
+            Grupos
+        </a>
+        <a class="btn btn-outline" href="{% url 'lista_estudiantes' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-user"/></svg>
+            Estudiantes
+        </a>
+        <a class="btn btn-outline" href="/admin/">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-lock"/></svg>
+            Administrar sistema
+        </a>
+    </div>
+</div>
 
-    <p>Hola, {{ request.user.first_name }}</p>
+{% elif rol == 'PROFESOR' %}
+<div class="card enter">
+    <h2>Panel de profesor</h2>
+    <p>Tus grupos, asistencias y calendario aparecerán aquí conforme se habiliten.</p>
+    <ul class="nav-group" style="margin:0;">
+        <li class="nav-link" style="color: var(--slate-700); background: var(--slate-50); cursor: default;">
+            <svg class="icon" aria-hidden="true"><use href="#icon-users"/></svg> Mis grupos
+        </li>
+        <li class="nav-link" style="color: var(--slate-700); background: var(--slate-50); cursor: default;">
+            <svg class="icon" aria-hidden="true"><use href="#icon-check-circle"/></svg> Registrar asistencias
+        </li>
+        <li class="nav-link" style="color: var(--slate-700); background: var(--slate-50); cursor: default;">
+            <svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg> Consultar calendario
+        </li>
+    </ul>
+</div>
 
-    {% if rol == 'ADMIN' %}
-
-        <h2>Panel de administrador</h2>
-        <p>Gestion de la plataforma</p>
-
-        <ul>
-            <li><a href="/admin/">Administrar sistema</a></li>
-        </ul>
-
-    {% elif rol == 'PROFESOR' %}
-
-        <h2>Panel de profesor</h2>
-
-        <ul>
-            <li>Mis grupos</li>
-            <li>Registrar asistencias</li>
-            <li>Consultar calendario</li>
-        </ul>
-
-    {% elif rol == 'ESTUDIANTE' %}
-
-        <h2>Panel de estudiante</h2>
-
-        <ul>
-            <li>Mis cursos</li>
-            <li>Consultar calendario</li>
-            <li>Consultar resultados</li>
-        </ul>
-
-    {% endif %}
-
-    <a href="{% url 'logout' %}">Cerrar sesion</a>
-
-</body>
-</html>
+{% elif rol == 'ESTUDIANTE' %}
+<div class="card enter" style="border-color: var(--violet-200);">
+    <h2>Panel de estudiante</h2>
+    <p>Tus cursos, calendario y resultados aparecerán aquí conforme se habiliten.</p>
+    <ul class="nav-group" style="margin:0;">
+        <li class="nav-link" style="color: var(--slate-700); background: var(--violet-50); cursor: default;">
+            <svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg> Mis cursos
+        </li>
+        <li class="nav-link" style="color: var(--slate-700); background: var(--violet-50); cursor: default;">
+            <svg class="icon" aria-hidden="true"><use href="#icon-home"/></svg> Consultar calendario
+        </li>
+        <li class="nav-link" style="color: var(--slate-700); background: var(--violet-50); cursor: default;">
+            <svg class="icon" aria-hidden="true"><use href="#icon-check-circle"/></svg> Consultar resultados
+        </li>
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

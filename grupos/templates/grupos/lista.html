@@ -1,74 +1,94 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Grupos{% endblock %}
+{% block page_title %}Grupos{% endblock %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>EduControl - Grupos</title>
-</head>
-<body>
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Gestión de grupos</h1>
+        <p>Grupos abiertos para cada curso, con su profesor y capacidad.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'crear_grupo' %}">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-user-plus"/></svg>
+        Registrar nuevo grupo
+    </a>
+</div>
 
-    <h1>Gestion de grupos</h1>
-
-    <a href="{% url 'crear_grupo' %}">Registrar nuevo grupo</a>
-
-    <h2>Grupos registrados</h2>
-
+<div class="table-card enter">
     {% if grupos %}
-        <table border="1">
+    <table>
+        <thead>
             <tr>
                 <th>Nombre</th>
                 <th>Curso</th>
                 <th>Profesor</th>
                 <th>Capacidad</th>
-                <th>Fecha de inicio</th>
-                <th>Fecha de fin</th>
-                <th>Dias de clase</th>
+                <th>Fechas</th>
+                <th>Días de clase</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
-
+        </thead>
+        <tbody>
             {% for grupo in grupos %}
-                <tr>
-                    <td>{{ grupo.nombre }}</td>
-                    <td>{{ grupo.curso.nombre }}</td>
-                    <td>{{ grupo.profesor.usuario.first_name }} {{ grupo.profesor.usuario.last_name }}</td>
-                    <td>{{ grupo.capacidad }}</td>
-                    <td>{{ grupo.fecha_inicio }}</td>
-                    <td>{{ grupo.fecha_fin }}</td>
-                    <td>{{ grupo.dias_clase }}</td>
-                    <td>
-                        {% if grupo.activo %}
-                            Activo
-                        {% else %}
-                            Inactivo
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'editar_grupo' grupo.id %}">Editar</a>
+            <tr>
+                <td data-label="Nombre"><strong>{{ grupo.nombre }}</strong></td>
+                <td data-label="Curso">{{ grupo.curso.nombre }}</td>
+                <td data-label="Profesor">{{ grupo.profesor.usuario.first_name }} {{ grupo.profesor.usuario.last_name }}</td>
+                <td data-label="Capacidad">
+                    <span class="badge badge-neutral">
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-users"/></svg>
+                        {{ grupo.capacidad }} lugares
+                    </span>
+                </td>
+                <td data-label="Fechas">{{ grupo.fecha_inicio }} – {{ grupo.fecha_fin }}</td>
+                <td data-label="Días">{{ grupo.dias_clase }}</td>
+                <td data-label="Estado">
+                    {% if grupo.activo %}
+                        <span class="badge badge-success"><span class="badge-dot"></span>Activo</span>
+                    {% else %}
+                        <span class="badge badge-neutral"><span class="badge-dot"></span>Inactivo</span>
+                    {% endif %}
+                </td>
+                <td data-label="Acciones">
+                    <div class="row-actions">
+                        <a class="btn btn-outline btn-sm" href="{% url 'editar_grupo' grupo.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pencil"/></svg>
+                            Editar
+                        </a>
 
-                        <form method="POST" action="{% url 'eliminar_grupo' grupo.id %}">
+                        <form method="POST" action="{% url 'cambiar_estado_grupo' grupo.id %}" class="inline-form">
                             {% csrf_token %}
-                            <button type="submit" onclick="return confirm('¿Estas seguro de eliminar este grupo?')">
+                            <button type="submit" class="btn btn-outline btn-sm">
+                                {% if grupo.activo %}
+                                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pause-circle"/></svg>
+                                    Desactivar
+                                {% else %}
+                                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                                    Activar
+                                {% endif %}
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{% url 'eliminar_grupo' grupo.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger-ghost btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar este grupo?')">
+                                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-trash"/></svg>
                                 Eliminar
                             </button>
                         </form>
-
-                        <form method="POST" action="{% url 'cambiar_estado_grupo' grupo.id %}">
-                            {% csrf_token %}
-                            <button type="submit">
-                                {% if grupo.activo %}Desactivar{% else %}Activar{% endif %}
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
             {% endfor %}
-        </table>
+        </tbody>
+    </table>
     {% else %}
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
         <p>No hay grupos registrados.</p>
+    </div>
     {% endif %}
-
-    <br>
-    <a href="{% url 'inicio' %}">Volver al inicio</a>
-
-</body>
-</html>
+</div>
+{% endblock %}

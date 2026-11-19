@@ -1,73 +1,83 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Cursos{% endblock %}
+{% block page_title %}Cursos{% endblock %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>EduControl - Cursos</title>
-</head>
-<body>
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Gestión de cursos</h1>
+        <p>Catálogo de cursos que ofrece el centro de capacitación.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'crear_curso' %}">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-user-plus"/></svg>
+        Registrar nuevo curso
+    </a>
+</div>
 
-    <h1>Gestion de cursos</h1>
-
-    <a href="{% url 'crear_curso' %}">Registrar nuevo curso</a>
-
-    <h2>Cursos registrados</h2>
-
+<div class="table-card enter">
     {% if cursos %}
-        <table border="1">
+    <table>
+        <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Duracion (horas)</th>
+                <th>Descripción</th>
+                <th>Duración (horas)</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
-
+        </thead>
+        <tbody>
             {% for curso in cursos %}
-                <tr>
-                    <td>{{ curso.nombre }}</td>
-                    <td>{{ curso.descripcion }}</td>
-                    <td>{{ curso.duracion_horas }}</td>
-                    <td>
-                        {% if curso.activo %}
-                            Activo
-                        {% else %}
-                            Inactivo
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'editar_curso' curso.id %}">
+            <tr>
+                <td data-label="Nombre"><strong>{{ curso.nombre }}</strong></td>
+                <td data-label="Descripción">{{ curso.descripcion }}</td>
+                <td data-label="Duración">{{ curso.duracion_horas }} h</td>
+                <td data-label="Estado">
+                    {% if curso.activo %}
+                        <span class="badge badge-success"><span class="badge-dot"></span>Activo</span>
+                    {% else %}
+                        <span class="badge badge-neutral"><span class="badge-dot"></span>Inactivo</span>
+                    {% endif %}
+                </td>
+                <td data-label="Acciones">
+                    <div class="row-actions">
+                        <a class="btn btn-outline btn-sm" href="{% url 'editar_curso' curso.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pencil"/></svg>
                             Editar
                         </a>
 
-                        <form method="POST" action="{% url 'eliminar_curso' curso.id %}">
+                        <form method="POST" action="{% url 'cambiar_estado' curso.id %}" class="inline-form">
                             {% csrf_token %}
-                            <button type="submit"
-                                onclick="return confirm('¿Estas seguro de eliminar este curso?')">
-                                Eliminar
-                            </button>
-                        </form>
-
-                        <form method="POST" action="{% url 'cambiar_estado' curso.id %}">
-                            {% csrf_token %}
-                            <button type="submit">
+                            <button type="submit" class="btn btn-outline btn-sm">
                                 {% if curso.activo %}
+                                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pause-circle"/></svg>
                                     Desactivar
                                 {% else %}
+                                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
                                     Activar
                                 {% endif %}
                             </button>
                         </form>
-                    </td>
-                </tr>
+
+                        <form method="POST" action="{% url 'eliminar_curso' curso.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger-ghost btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar este curso?')">
+                                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-trash"/></svg>
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
             {% endfor %}
-        </table>
+        </tbody>
+    </table>
     {% else %}
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
         <p>No hay cursos registrados.</p>
+    </div>
     {% endif %}
-
-    <br>
-    <a href="{% url 'inicio' %}">Volver al inicio</a>
-
-</body>
-</html>
+</div>
+{% endblock %}

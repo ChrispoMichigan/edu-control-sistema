@@ -1,52 +1,73 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Estudiante{% endblock %}
+{% block page_title %}{% if estudiante %}Editar estudiante{% else %}Nuevo estudiante{% endif %}{% endblock %}
 
-<h1>
-    {% if estudiante %}
-        Editar estudiante
-    {% else %}
-        Registrar estudiante
-    {% endif %}
-</h1>
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>{% if estudiante %}Editar estudiante{% else %}Registrar estudiante{% endif %}</h1>
+        <p>La matrícula debe ser única para cada estudiante.</p>
+    </div>
+</div>
 
-{% if error %}
-    <p style="color: red;">{{ error }}</p>
-{% endif %}
-
-<form method="POST">
-    {% csrf_token %}
-
-    <label>Nombre:</label>
-    <input type="text" name="first_name"
-           value="{{ estudiante.usuario.first_name|default:'' }}" required>
-    <br><br>
-
-    <label>Apellido:</label>
-    <input type="text" name="last_name"
-           value="{{ estudiante.usuario.last_name|default:'' }}" required>
-    <br><br>
-
-    <label>Correo electronico:</label>
-    <input type="email" name="email"
-           value="{{ estudiante.usuario.email|default:'' }}" required>
-    <br><br>
-
-    <label>Matricula:</label>
-    <input type="text" name="matricula"
-           value="{{ estudiante.matricula|default:'' }}" required>
-    <br><br>
-
-    <label>Telefono:</label>
-    <input type="text" name="telefono"
-           value="{{ estudiante.telefono|default:'' }}">
-    <br><br>
-
-    {% if not estudiante %}
-        <label>Contrasena:</label>
-        <input type="password" name="password" required>
-        <br><br>
+<div class="card enter">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-x"/></svg>
+        <span>{{ error }}</span>
+    </div>
     {% endif %}
 
-    <button type="submit">Guardar</button>
-</form>
+    <form method="POST" class="form-grid">
+        {% csrf_token %}
 
-<br>
-<a href="{% url 'lista_estudiantes' %}">Cancelar</a>
+        <div class="field">
+            <label for="first_name">Nombre</label>
+            <input type="text" id="first_name" name="first_name"
+                   value="{{ estudiante.usuario.first_name|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="last_name">Apellido</label>
+            <input type="text" id="last_name" name="last_name"
+                   value="{{ estudiante.usuario.last_name|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email"
+                   value="{{ estudiante.usuario.email|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="matricula">Matrícula</label>
+            <input type="text" id="matricula" name="matricula"
+                   value="{{ estudiante.matricula|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" name="telefono"
+                   value="{{ estudiante.telefono|default:'' }}">
+        </div>
+
+        {% if not estudiante %}
+        <div class="field">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Guardar
+            </button>
+            <a class="btn btn-outline" href="{% url 'lista_estudiantes' %}">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
