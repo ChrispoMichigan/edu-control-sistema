@@ -28,3 +28,15 @@ class Clase(models.Model):
 
     def __str__(self):
         return f"{self.grupo.nombre} - {self.fecha}"
+
+
+class Festivo(models.Model):
+
+    fecha = models.DateField(unique=True)
+    nombre = models.CharField(max_length=150)
+
+    class Meta:
+        ordering = ['fecha']
+
+    def __str__(self):
+        return f"{self.fecha} - {self.nombre}"

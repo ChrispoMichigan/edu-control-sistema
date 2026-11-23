@@ -8,4 +8,6 @@ urlpatterns = [
     path('editar/<int:id>/', views.editar_grupo, name='editar_grupo'),
     path('eliminar/<int:id>/', views.eliminar_grupo, name='eliminar_grupo'),
     path('estado/<int:id>/', views.cambiar_estado, name='cambiar_estado_grupo'),
+    path('mi-horario/', views.mi_horario, name='mi_horario'),
+    path('horario/eliminar/<int:id>/', views.eliminar_horario, name='eliminar_horario'),
 ]

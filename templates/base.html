@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body{% if request.user.is_authenticated and request.user.role == 'ESTUDIANTE' %} class="role-estudiante"{% endif %}>
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
     {% include "_icons.html" %}
 
@@ -50,9 +50,51 @@
                     </a>
                 </li>
                 <li>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'lista_profesores' %}is-active{% endif %}" href="{% url 'lista_profesores' %}">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-user"/></svg>
+                        Profesores
+                    </a>
+                </li>
+                <li>
                     <a class="nav-link" href="/admin/">
                         <svg class="icon" aria-hidden="true"><use href="#icon-lock"/></svg>
                         Administrar sistema
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if request.user.is_authenticated and request.user.role == 'PROFESOR' %}
+            <ul class="nav-group">
+                <li class="nav-group-label">Profesor</li>
+                <li>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'mis_grupos' %}is-active{% endif %}" href="{% url 'mis_grupos' %}">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-users"/></svg>
+                        Mis grupos
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'mi_horario' %}is-active{% endif %}" href="{% url 'mi_horario' %}">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-calendar"/></svg>
+                        Mi horario
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if request.user.is_authenticated and request.user.role == 'ESTUDIANTE' %}
+            <ul class="nav-group">
+                <li class="nav-group-label">Estudiante</li>
+                <li>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'catalogo_cursos' or request.resolver_match.url_name == 'detalle_curso' %}is-active{% endif %}" href="{% url 'catalogo_cursos' %}">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg>
+                        Cursos
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'horario_estudiante' %}is-active{% endif %}" href="{% url 'horario_estudiante' %}">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-calendar"/></svg>
+                        Mi horario
                     </a>
                 </li>
             </ul>
@@ -83,6 +125,12 @@
         </header>
 
         <main class="main" id="main-content">
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-x"/></svg>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
             {% block content %}{% endblock %}
         </main>
     </div>

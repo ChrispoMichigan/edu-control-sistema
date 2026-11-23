@@ -16,3 +16,6 @@ python manage.py migrate
 
 python manage.py createsuperuser
 
+admin@edu.test / admin1234
+prof@edu.test / prof1234
+alumno@edu.test / alumno1234

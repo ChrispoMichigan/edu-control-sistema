@@ -27,6 +27,10 @@
             <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-user"/></svg>
             Estudiantes
         </a>
+        <a class="btn btn-outline" href="{% url 'lista_profesores' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-user"/></svg>
+            Profesores
+        </a>
         <a class="btn btn-outline" href="/admin/">
             <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-lock"/></svg>
             Administrar sistema
@@ -37,35 +41,33 @@
 {% elif rol == 'PROFESOR' %}
 <div class="card enter">
     <h2>Panel de profesor</h2>
-    <p>Tus grupos, asistencias y calendario aparecerán aquí conforme se habiliten.</p>
-    <ul class="nav-group" style="margin:0;">
-        <li class="nav-link" style="color: var(--slate-700); background: var(--slate-50); cursor: default;">
-            <svg class="icon" aria-hidden="true"><use href="#icon-users"/></svg> Mis grupos
-        </li>
-        <li class="nav-link" style="color: var(--slate-700); background: var(--slate-50); cursor: default;">
-            <svg class="icon" aria-hidden="true"><use href="#icon-check-circle"/></svg> Registrar asistencias
-        </li>
-        <li class="nav-link" style="color: var(--slate-700); background: var(--slate-50); cursor: default;">
-            <svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg> Consultar calendario
-        </li>
-    </ul>
+    <p>Administra tus grupos, horario, clases y asistencias.</p>
+    <div class="form-actions" style="flex-wrap: wrap;">
+        <a class="btn btn-outline" href="{% url 'mis_grupos' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-users"/></svg>
+            Mis grupos
+        </a>
+        <a class="btn btn-outline" href="{% url 'mi_horario' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-calendar"/></svg>
+            Mi horario
+        </a>
+    </div>
 </div>
 
 {% elif rol == 'ESTUDIANTE' %}
 <div class="card enter" style="border-color: var(--violet-200);">
     <h2>Panel de estudiante</h2>
-    <p>Tus cursos, calendario y resultados aparecerán aquí conforme se habiliten.</p>
-    <ul class="nav-group" style="margin:0;">
-        <li class="nav-link" style="color: var(--slate-700); background: var(--violet-50); cursor: default;">
-            <svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg> Mis cursos
-        </li>
-        <li class="nav-link" style="color: var(--slate-700); background: var(--violet-50); cursor: default;">
-            <svg class="icon" aria-hidden="true"><use href="#icon-home"/></svg> Consultar calendario
-        </li>
-        <li class="nav-link" style="color: var(--slate-700); background: var(--violet-50); cursor: default;">
-            <svg class="icon" aria-hidden="true"><use href="#icon-check-circle"/></svg> Consultar resultados
-        </li>
-    </ul>
+    <p>Explora el catálogo, inscríbete y da seguimiento a tu progreso.</p>
+    <div class="form-actions" style="flex-wrap: wrap;">
+        <a class="btn btn-outline" href="{% url 'catalogo_cursos' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-book"/></svg>
+            Catálogo de cursos
+        </a>
+        <a class="btn btn-outline" href="{% url 'horario_estudiante' %}">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-calendar"/></svg>
+            Mi horario
+        </a>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

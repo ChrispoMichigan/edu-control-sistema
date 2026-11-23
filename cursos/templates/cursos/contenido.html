@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Contenido del curso{% endblock %}
+{% block page_title %}Contenido del curso{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Contenido de {{ curso.nombre }}</h1>
+        <p>Organiza el curso en secciones y lecciones.</p>
+    </div>
+    <a class="btn btn-outline" href="{% url 'lista_cursos' %}">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+        Volver a cursos
+    </a>
+</div>
+
+<div class="card enter" style="margin-bottom: var(--space-5);">
+    <form method="POST" action="{% url 'crear_seccion' curso.id %}" class="form-grid" style="max-width:none; grid-template-columns: 2fr 1fr auto; align-items:end;">
+        {% csrf_token %}
+        <div class="field">
+            <label for="nombre">Nueva sección</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ejemplo: Introducción" required>
+        </div>
+        <div class="field">
+            <label for="orden">Orden</label>
+            <input type="number" id="orden" name="orden" min="0" value="0">
+        </div>
+        <div class="field">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Agregar sección
+            </button>
+        </div>
+    </form>
+</div>
+
+{% if secciones %}
+    {% for seccion in secciones %}
+    <details class="accordion-item enter" open>
+        <summary class="accordion-trigger">
+            <span>{{ seccion.nombre }}</span>
+            <span class="row-actions">
+                <a class="btn btn-outline btn-sm" href="{% url 'editar_seccion' seccion.id %}" onclick="event.stopPropagation()">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pencil"/></svg>
+                    Editar
+                </a>
+                <form method="POST" action="{% url 'eliminar_seccion' seccion.id %}" class="inline-form" onclick="event.stopPropagation()">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger-ghost btn-sm"
+                        onclick="return confirm('¿Eliminar esta sección y sus lecciones?')">
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-trash"/></svg>
+                        Eliminar
+                    </button>
+                </form>
+                <svg class="icon icon-sm accordion-chevron" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+            </span>
+        </summary>
+
+        {% for leccion in seccion.lecciones.all %}
+        <div class="lesson-row">
+            <span class="lesson-title" style="flex:1;">{{ leccion.titulo }}</span>
+            <a class="btn btn-outline btn-sm" href="{% url 'editar_leccion' leccion.id %}">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pencil"/></svg>
+                Editar
+            </a>
+            <form method="POST" action="{% url 'eliminar_leccion' leccion.id %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger-ghost btn-sm"
+                    onclick="return confirm('¿Eliminar esta lección?')">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-trash"/></svg>
+                    Eliminar
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+
+        <div class="lesson-row">
+            <form method="POST" action="{% url 'crear_leccion' seccion.id %}" class="form-grid" style="max-width:none; grid-template-columns: 2fr 1fr auto; flex:1; align-items:end;">
+                {% csrf_token %}
+                <div class="field" style="margin:0;">
+                    <label for="titulo-{{ seccion.id }}">Nueva lección</label>
+                    <input type="text" id="titulo-{{ seccion.id }}" name="titulo" placeholder="Título de la lección" required>
+                </div>
+                <div class="field" style="margin:0;">
+                    <label for="orden-{{ seccion.id }}">Orden</label>
+                    <input type="number" id="orden-{{ seccion.id }}" name="orden" min="0" value="0">
+                </div>
+                <div class="field" style="margin:0;">
+                    <button type="submit" class="btn btn-outline btn-sm">
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                        Agregar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </details>
+    {% endfor %}
+{% else %}
+<div class="table-card enter">
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Este curso todavía no tiene secciones.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

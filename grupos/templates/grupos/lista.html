@@ -24,7 +24,6 @@
                 <th>Profesor</th>
                 <th>Capacidad</th>
                 <th>Fechas</th>
-                <th>Días de clase</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -42,7 +41,6 @@
                     </span>
                 </td>
                 <td data-label="Fechas">{{ grupo.fecha_inicio }} – {{ grupo.fecha_fin }}</td>
-                <td data-label="Días">{{ grupo.dias_clase }}</td>
                 <td data-label="Estado">
                     {% if grupo.activo %}
                         <span class="badge badge-success"><span class="badge-dot"></span>Activo</span>

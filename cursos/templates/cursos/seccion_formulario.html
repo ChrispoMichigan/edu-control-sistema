@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Sección{% endblock %}
+{% block page_title %}Editar sección{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Editar sección</h1>
+        <p>{{ seccion.curso.nombre }}</p>
+    </div>
+</div>
+
+<div class="card enter">
+    <form method="POST" class="form-grid">
+        {% csrf_token %}
+        <div class="field">
+            <label for="nombre">Nombre de la sección</label>
+            <input type="text" id="nombre" name="nombre" value="{{ seccion.nombre }}" required>
+        </div>
+        <div class="field">
+            <label for="orden">Orden</label>
+            <input type="number" id="orden" name="orden" min="0" value="{{ seccion.orden }}">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Guardar
+            </button>
+            <a class="btn btn-outline" href="{% url 'gestionar_contenido' seccion.curso_id %}">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+                Volver al contenido
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

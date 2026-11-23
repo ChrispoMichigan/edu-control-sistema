@@ -11,7 +11,7 @@
 </div>
 
 <div class="card enter">
-    <form method="POST" class="form-grid">
+    <form method="POST" class="form-grid" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="field">
@@ -28,6 +28,17 @@
             <label for="duracion_horas">Duración en horas</label>
             <input type="number" id="duracion_horas" name="duracion_horas"
                    value="{{ curso.duracion_horas|default:'' }}" min="1" required>
+        </div>
+
+        <div class="field">
+            <label for="imagen">Imagen del curso</label>
+            {% if curso.imagen %}
+                <div class="catalog-card-media" style="max-width:240px; border-radius:var(--radius-md); margin-bottom:var(--space-2);">
+                    <img src="{{ curso.imagen.url }}" alt="">
+                </div>
+            {% endif %}
+            <input type="file" id="imagen" name="imagen" accept="image/*">
+            <p class="hint">Opcional. Se muestra en el catálogo de cursos para los alumnos.</p>
         </div>
 
         <div class="form-actions">

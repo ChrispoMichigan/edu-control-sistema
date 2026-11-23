@@ -17,16 +17,22 @@ Including another URLconf
 
 
 
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from usuarios import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.login_view, name='login'),
-    path('inicio/', views.inicio_view, name='inicio'),
-    path('cerrar-sesion/', views.logout_view, name='logout'),
+    path('', include('usuarios.urls')),
     path('cursos/', include('cursos.urls')),
     path('grupos/', include('grupos.urls')),
     path('estudiantes/', include('estudiantes.urls')),
+    path('profesores/', include('profesores.urls')),
+    path('inscripciones/', include('inscripciones.urls')),
+    path('calendario/', include('calendario.urls')),
+    path('asistencias/', include('asistencias.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

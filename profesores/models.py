@@ -1,9 +1,10 @@
 
 from django.db import models
+from core.models import SoftDeleteModel
 from usuarios.models import Usuario
 
 
-class Profesor(models.Model):
+class Profesor(SoftDeleteModel):
 
     usuario = models.OneToOneField(
         Usuario,

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Profesores{% endblock %}
+{% block page_title %}Profesores{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Profesores registrados</h1>
+        <p>Alta de profesores y asignación a grupos.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'crear_profesor' %}">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-user-plus"/></svg>
+        Registrar profesor
+    </a>
+</div>
+
+<div class="table-card enter">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Especialidad</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profesor in profesores %}
+            <tr>
+                <td data-label="Nombre"><strong>{{ profesor.usuario.first_name }} {{ profesor.usuario.last_name }}</strong></td>
+                <td data-label="Correo">
+                    <span style="display:inline-flex; align-items:center; gap: var(--space-1); color: var(--color-text-muted);">
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-mail"/></svg>
+                        {{ profesor.usuario.email }}
+                    </span>
+                </td>
+                <td data-label="Especialidad">{{ profesor.especialidad|default:"—" }}</td>
+                <td data-label="Teléfono">{{ profesor.telefono|default:"—" }}</td>
+                <td data-label="Estado">
+                    {% if profesor.activo %}
+                        <span class="badge badge-success"><span class="badge-dot"></span>Activo</span>
+                    {% else %}
+                        <span class="badge badge-neutral"><span class="badge-dot"></span>Inactivo</span>
+                    {% endif %}
+                </td>
+                <td data-label="Acciones">
+                    <div class="row-actions">
+                        <a class="btn btn-outline btn-sm" href="{% url 'editar_profesor' profesor.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pencil"/></svg>
+                            Editar
+                        </a>
+
+                        <form method="POST" action="{% url 'cambiar_estado_profesor' profesor.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline btn-sm">
+                                {% if profesor.activo %}
+                                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pause-circle"/></svg>
+                                    Desactivar
+                                {% else %}
+                                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                                    Activar
+                                {% endif %}
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{% url 'eliminar_profesor' profesor.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger-ghost btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar este profesor?')">
+                                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-trash"/></svg>
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">
+                    <div class="empty-state">
+                        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+                        <p>No hay profesores registrados.</p>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

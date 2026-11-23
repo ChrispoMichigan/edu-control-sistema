@@ -104,7 +104,9 @@ def eliminar_estudiante(request, id):
     estudiante = get_object_or_404(Estudiante, id=id)
 
     if request.method == 'POST':
-        estudiante.usuario.delete()
+        estudiante.eliminar()
+        estudiante.usuario.is_active = False
+        estudiante.usuario.save(update_fields=['is_active'])
 
     return redirect('lista_estudiantes')
 

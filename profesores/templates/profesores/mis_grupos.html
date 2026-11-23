@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Mis grupos{% endblock %}
+{% block page_title %}Mis grupos{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Mis grupos</h1>
+        <p>Grupos que tienes asignados.</p>
+    </div>
+</div>
+
+<div class="table-card enter">
+    {% if grupos %}
+    <table>
+        <thead>
+            <tr>
+                <th>Grupo</th>
+                <th>Curso</th>
+                <th>Cupo</th>
+                <th>Fechas</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grupo in grupos %}
+            <tr>
+                <td data-label="Grupo"><strong>{{ grupo.nombre }}</strong></td>
+                <td data-label="Curso">{{ grupo.curso.nombre }}</td>
+                <td data-label="Cupo">
+                    <span class="badge badge-neutral">
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-users"/></svg>
+                        {{ grupo.cupo_disponible }} de {{ grupo.capacidad }}
+                    </span>
+                </td>
+                <td data-label="Fechas">{{ grupo.fecha_inicio }} – {{ grupo.fecha_fin }}</td>
+                <td data-label="Acciones">
+                    <div class="row-actions">
+                        <a class="btn btn-outline btn-sm" href="{% url 'ver_estudiantes_grupo' grupo.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-users"/></svg>
+                            Estudiantes
+                        </a>
+                        <a class="btn btn-outline btn-sm" href="{% url 'progreso_grupo' grupo.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chart-bar"/></svg>
+                            Progreso
+                        </a>
+                        <a class="btn btn-outline btn-sm" href="{% url 'lista_clases' grupo.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-calendar"/></svg>
+                            Clases
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Todavía no tienes grupos asignados.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

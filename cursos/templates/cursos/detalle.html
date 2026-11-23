@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}EduControl - {{ curso.nombre }}{% endblock %}
+{% block page_title %}{{ curso.nombre }}{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>{{ curso.nombre }}</h1>
+        <p>{{ curso.descripcion }}</p>
+    </div>
+    <a class="btn btn-outline" href="{% url 'catalogo_cursos' %}">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+        Volver al catálogo
+    </a>
+</div>
+
+{% if inscrito %}
+<div class="card enter" style="margin-bottom: var(--space-5);">
+    <h3 style="margin-bottom:var(--space-3);">Tu progreso</h3>
+    <div class="progress-row">
+        <div class="progress-bar"><div class="progress-bar-fill" style="width:{{ porcentaje }}%;"></div></div>
+        <span class="progress-bar-label">{{ porcentaje }}%</span>
+    </div>
+</div>
+
+{% if secciones %}
+    {% for seccion in secciones %}
+    <details class="accordion-item enter" open>
+        <summary class="accordion-trigger">
+            <span>{{ seccion.nombre }}</span>
+            <svg class="icon icon-sm accordion-chevron" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+        </summary>
+        {% for leccion in seccion.lecciones.all %}
+        <div class="lesson-row {% if leccion.id in completadas_ids %}is-done{% endif %}">
+            <form method="POST" action="{% url 'marcar_leccion' leccion.id %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="lesson-check {% if leccion.id in completadas_ids %}is-done{% endif %}"
+                    aria-label="Marcar lección como completada">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                </button>
+            </form>
+            <p class="lesson-title" style="flex:1;">{{ leccion.titulo }}</p>
+        </div>
+        {% if leccion.texto %}
+        <div class="lesson-row" style="border-top:none; padding-top:0;">
+            <p style="color:var(--color-text-muted); font-size:var(--text-sm);">{{ leccion.texto }}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </details>
+    {% endfor %}
+{% else %}
+<div class="table-card enter">
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Este curso todavía no tiene contenido disponible.</p>
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<div class="table-card enter">
+    {% if grupos %}
+    <table>
+        <thead>
+            <tr>
+                <th>Grupo</th>
+                <th>Profesor</th>
+                <th>Horario</th>
+                <th>Cupo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grupo in grupos %}
+            <tr>
+                <td data-label="Grupo"><strong>{{ grupo.nombre }}</strong></td>
+                <td data-label="Profesor">{{ grupo.profesor.usuario.first_name }} {{ grupo.profesor.usuario.last_name }}</td>
+                <td data-label="Horario">
+                    {% for h in grupo.horarios.all %}
+                        <div>{{ h.get_dia_semana_display }} {{ h.hora_inicio|time:"H:i" }}–{{ h.hora_fin|time:"H:i" }}</div>
+                    {% empty %}
+                        <span style="color:var(--color-text-muted);">Por definir</span>
+                    {% endfor %}
+                </td>
+                <td data-label="Cupo">
+                    {% with disponible=grupo.cupo_disponible %}
+                    <span class="badge {% if disponible > 0 %}badge-success{% else %}badge-danger{% endif %}">
+                        <span class="badge-dot"></span>{{ disponible }} de {{ grupo.capacidad }}
+                    </span>
+                    {% endwith %}
+                </td>
+                <td data-label="Acciones">
+                    {% if grupo.cupo_disponible > 0 %}
+                    <form method="POST" action="{% url 'inscribirse' grupo.id %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                            Inscribirme
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="badge badge-neutral">Sin cupo</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Este curso todavía no tiene grupos abiertos.</p>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

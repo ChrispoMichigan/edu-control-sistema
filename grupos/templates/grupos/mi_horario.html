@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Mi horario{% endblock %}
+{% block page_title %}Mi horario{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Mi horario semanal</h1>
+        <p>Los bloques que definas aquí los verán tus alumnos inscritos.</p>
+    </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-x"/></svg>
+    <span>{{ error }}</span>
+</div>
+{% endif %}
+
+{% if mis_grupos %}
+<div class="card enter" style="margin-bottom: var(--space-5);">
+    <form method="POST" class="form-grid" style="max-width:none; grid-template-columns: repeat(4, 1fr) auto; align-items:end;">
+        {% csrf_token %}
+        <div class="field">
+            <label for="grupo">Grupo</label>
+            <select id="grupo" name="grupo" required>
+                {% for grupo in mis_grupos %}
+                    <option value="{{ grupo.id }}">{{ grupo.nombre }} - {{ grupo.curso.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="dia_semana">Día</label>
+            <select id="dia_semana" name="dia_semana" required>
+                {% for valor, nombre in dias %}
+                    <option value="{{ valor }}">{{ nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="hora_inicio">Hora de inicio</label>
+            <input type="time" id="hora_inicio" name="hora_inicio" required>
+        </div>
+        <div class="field">
+            <label for="hora_fin">Hora de fin</label>
+            <input type="time" id="hora_fin" name="hora_fin" required>
+        </div>
+        <div class="field">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Agregar
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="schedule-grid enter">
+    <div class="schedule-hour-label"></div>
+    {% for valor, nombre in dias %}
+        <div class="schedule-day-label" style="grid-column:{{ valor|add:2 }};">{{ nombre }}</div>
+    {% endfor %}
+
+    {% for hora in horas %}
+        <div class="schedule-hour-label" style="grid-row:{{ forloop.counter0|add:2 }} / span 2;">{{ hora }}:00</div>
+    {% endfor %}
+
+    {% for h in horarios %}
+        <div class="schedule-block" style="grid-column:{{ h.columna }}; grid-row:{{ h.fila_inicio }} / {{ h.fila_fin }};">
+            <strong>{{ h.grupo.nombre }}</strong>
+            <span>{{ h.hora_inicio|time:"H:i" }}–{{ h.hora_fin|time:"H:i" }}</span>
+            <form method="POST" action="{% url 'eliminar_horario' h.id %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="schedule-block-remove" aria-label="Eliminar bloque"
+                    onclick="return confirm('¿Quitar este bloque del horario?')">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-x"/></svg>
+                </button>
+            </form>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="table-card enter">
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Todavía no tienes grupos asignados.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

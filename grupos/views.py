@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Grupo
+from .models import Grupo, Horario, HORARIO_HORAS
 from cursos.models import Curso
 from profesores.models import Profesor
 
@@ -33,8 +33,7 @@ def crear_grupo(request):
             nombre=request.POST.get('nombre'),
             capacidad=request.POST.get('capacidad'),
             fecha_inicio=request.POST.get('fecha_inicio'),
-            fecha_fin=request.POST.get('fecha_fin'),
-            dias_clase=request.POST.get('dias_clase')
+            fecha_fin=request.POST.get('fecha_fin')
         )
 
         return redirect('lista_grupos')
@@ -61,7 +60,6 @@ def editar_grupo(request, id):
         grupo.capacidad = request.POST.get('capacidad')
         grupo.fecha_inicio = request.POST.get('fecha_inicio')
         grupo.fecha_fin = request.POST.get('fecha_fin')
-        grupo.dias_clase = request.POST.get('dias_clase')
         grupo.save()
 
         return redirect('lista_grupos')
@@ -81,7 +79,7 @@ def eliminar_grupo(request, id):
     grupo = get_object_or_404(Grupo, id=id)
 
     if request.method == 'POST':
-        grupo.delete()
+        grupo.eliminar()
 
     return redirect('lista_grupos')
 
@@ -98,3 +96,53 @@ def cambiar_estado(request, id):
         grupo.save()
 
     return redirect('lista_grupos')
+
+
+@login_required
+def mi_horario(request):
+    if request.user.role != 'PROFESOR':
+        return redirect('inicio')
+
+    mis_grupos = Grupo.objects.filter(profesor__usuario=request.user, activo=True)
+    horarios = Horario.objects.filter(grupo__in=mis_grupos).select_related('grupo')
+
+    error = None
+    if request.method == 'POST':
+        grupo = get_object_or_404(mis_grupos, id=request.POST.get('grupo'))
+        dia_semana = request.POST.get('dia_semana')
+        hora_inicio = request.POST.get('hora_inicio')
+        hora_fin = request.POST.get('hora_fin')
+
+        if not (dia_semana and hora_inicio and hora_fin):
+            error = 'Completa día, hora de inicio y hora de fin.'
+        elif hora_fin <= hora_inicio:
+            error = 'La hora de fin debe ser posterior a la hora de inicio.'
+        else:
+            Horario.objects.create(
+                grupo=grupo,
+                dia_semana=dia_semana,
+                hora_inicio=hora_inicio,
+                hora_fin=hora_fin
+            )
+            return redirect('mi_horario')
+
+    return render(request, 'grupos/mi_horario.html', {
+        'mis_grupos': mis_grupos,
+        'horarios': horarios,
+        'dias': Horario.DiaSemana.choices,
+        'horas': HORARIO_HORAS,
+        'error': error
+    })
+
+
+@login_required
+def eliminar_horario(request, id):
+    if request.user.role != 'PROFESOR':
+        return redirect('inicio')
+
+    horario = get_object_or_404(Horario, id=id, grupo__profesor__usuario=request.user)
+
+    if request.method == 'POST':
+        horario.delete()
+
+    return redirect('mi_horario')

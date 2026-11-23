@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Nueva clase{% endblock %}
+{% block page_title %}Registrar clase{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Registrar clase</h1>
+        <p>{{ grupo.nombre }} - {{ grupo.curso.nombre }}</p>
+    </div>
+</div>
+
+<div class="card enter">
+    <form method="POST" class="form-grid">
+        {% csrf_token %}
+
+        <div class="field">
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha" required>
+            <p class="hint">Si la fecha es feriado en México, se marcará automáticamente.</p>
+        </div>
+
+        <div class="field">
+            <label for="hora_inicio">Hora de inicio</label>
+            <input type="time" id="hora_inicio" name="hora_inicio" required>
+        </div>
+
+        <div class="field">
+            <label for="hora_fin">Hora de fin</label>
+            <input type="time" id="hora_fin" name="hora_fin" required>
+        </div>
+
+        <div class="field">
+            <label for="tema">Tema</label>
+            <input type="text" id="tema" name="tema">
+        </div>
+
+        <div class="field">
+            <label for="observaciones">Observaciones</label>
+            <textarea id="observaciones" name="observaciones"></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Guardar clase
+            </button>
+            <a class="btn btn-outline" href="{% url 'lista_clases' grupo.id %}">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

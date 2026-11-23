@@ -46,6 +46,11 @@
                             Editar
                         </a>
 
+                        <a class="btn btn-outline btn-sm" href="{% url 'gestionar_contenido' curso.id %}">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-book"/></svg>
+                            Contenido
+                        </a>
+
                         <form method="POST" action="{% url 'cambiar_estado' curso.id %}" class="inline-form">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-outline btn-sm">

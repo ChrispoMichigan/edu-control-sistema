@@ -1,10 +1,11 @@
 
 from django.db import models
+from core.models import SoftDeleteModel
 from estudiantes.models import Estudiante
 from grupos.models import Grupo
 
 
-class Inscripcion(models.Model):
+class Inscripcion(SoftDeleteModel):
 
     estudiante = models.ForeignKey(
         Estudiante,
@@ -23,7 +24,8 @@ class Inscripcion(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['estudiante', 'grupo'],
-                name='inscripcion_unica_por_grupo'
+                condition=models.Q(eliminado_en__isnull=True),
+                name='inscripcion_unica_por_grupo_activa'
             )
         ]
 

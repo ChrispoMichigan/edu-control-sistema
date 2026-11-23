@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Profesor{% endblock %}
+{% block page_title %}{% if profesor %}Editar profesor{% else %}Nuevo profesor{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>{% if profesor %}Editar profesor{% else %}Registrar profesor{% endif %}</h1>
+        <p>Los campos marcados son obligatorios.</p>
+    </div>
+</div>
+
+<div class="card enter">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-x"/></svg>
+        <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" class="form-grid">
+        {% csrf_token %}
+
+        <div class="field">
+            <label for="first_name">Nombre</label>
+            <input type="text" id="first_name" name="first_name"
+                   value="{{ profesor.usuario.first_name|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="last_name">Apellido</label>
+            <input type="text" id="last_name" name="last_name"
+                   value="{{ profesor.usuario.last_name|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email"
+                   value="{{ profesor.usuario.email|default:'' }}" required>
+        </div>
+
+        <div class="field">
+            <label for="especialidad">Especialidad</label>
+            <input type="text" id="especialidad" name="especialidad"
+                   value="{{ profesor.especialidad|default:'' }}">
+        </div>
+
+        <div class="field">
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" name="telefono"
+                   value="{{ profesor.telefono|default:'' }}">
+        </div>
+
+        {% if not profesor %}
+        <div class="field">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Guardar
+            </button>
+            <a class="btn btn-outline" href="{% url 'lista_profesores' %}">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

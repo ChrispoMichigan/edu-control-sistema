@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Asistencia{% endblock %}
+{% block page_title %}Asistencia{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Asistencia - {{ clase.fecha }}</h1>
+        <p>{{ clase.grupo.nombre }} - {{ clase.grupo.curso.nombre }}</p>
+    </div>
+    <a class="btn btn-outline" href="{% url 'lista_clases' clase.grupo_id %}">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-chevron-left"/></svg>
+        Volver a clases
+    </a>
+</div>
+
+<div class="table-card enter">
+    {% if filas %}
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Estudiante</th>
+                    <th>Estado</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in filas %}
+                <tr>
+                    <td data-label="Estudiante">
+                        {{ fila.inscripcion.estudiante.usuario.first_name }} {{ fila.inscripcion.estudiante.usuario.last_name }}
+                    </td>
+                    <td data-label="Estado">
+                        <select name="estado_{{ fila.inscripcion.id }}">
+                            {% for valor, nombre in estados %}
+                                <option value="{{ valor }}"
+                                    {% if fila.asistencia.estado == valor or not fila.asistencia and valor == 'PRESENTE' %}selected{% endif %}>
+                                    {{ nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td data-label="Observaciones">
+                        <input type="text" name="observaciones_{{ fila.inscripcion.id }}"
+                               value="{{ fila.asistencia.observaciones|default:'' }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="form-actions" style="padding: var(--space-4);">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#icon-check-circle"/></svg>
+                Guardar asistencia
+            </button>
+        </div>
+    </form>
+    {% else %}
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Este grupo no tiene estudiantes inscritos todavía.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

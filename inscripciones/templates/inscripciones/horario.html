@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}EduControl - Mi horario{% endblock %}
+{% block page_title %}Mi horario{% endblock %}
+
+{% block content %}
+<div class="page-header enter">
+    <div>
+        <h1>Mi horario semanal</h1>
+        <p>Bloques de clase de los grupos en los que estás inscrito.</p>
+    </div>
+</div>
+
+{% if horarios %}
+<div class="schedule-grid enter">
+    <div class="schedule-hour-label"></div>
+    {% for valor, nombre in dias %}
+        <div class="schedule-day-label" style="grid-column:{{ valor|add:2 }};">{{ nombre }}</div>
+    {% endfor %}
+
+    {% for hora in horas %}
+        <div class="schedule-hour-label" style="grid-row:{{ forloop.counter0|add:2 }} / span 2;">{{ hora }}:00</div>
+    {% endfor %}
+
+    {% for h in horarios %}
+        <div class="schedule-block" style="grid-column:{{ h.columna }}; grid-row:{{ h.fila_inicio }} / {{ h.fila_fin }};">
+            <strong>{{ h.grupo.nombre }}</strong>
+            <span>{{ h.hora_inicio|time:"H:i" }}–{{ h.hora_fin|time:"H:i" }}</span>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="table-card enter">
+    <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-inbox"/></svg>
+        <p>Todavía no tienes horario: inscríbete a un grupo desde el catálogo.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
