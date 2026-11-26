@@ -46,8 +46,8 @@ def crear_profesor(request):
 
                 Profesor.objects.create(
                     usuario=usuario,
-                    especialidad=request.POST.get('especialidad'),
-                    telefono=request.POST.get('telefono')
+                    especialidad=request.POST.get('especialidad', ''),
+                    telefono=request.POST.get('telefono', '')
                 )
 
             return redirect('lista_profesores')
@@ -76,8 +76,8 @@ def editar_profesor(request, id):
             profesor.usuario.last_name = request.POST.get('last_name')
             profesor.usuario.save()
 
-            profesor.especialidad = request.POST.get('especialidad')
-            profesor.telefono = request.POST.get('telefono')
+            profesor.especialidad = request.POST.get('especialidad', '')
+            profesor.telefono = request.POST.get('telefono', '')
             profesor.save()
 
             return redirect('lista_profesores')

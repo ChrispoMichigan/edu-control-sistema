@@ -48,7 +48,7 @@ def crear_estudiante(request):
                 Estudiante.objects.create(
                     usuario=usuario,
                     matricula=matricula,
-                    telefono=request.POST.get('telefono')
+                    telefono=request.POST.get('telefono', '')
                 )
 
             return redirect('lista_estudiantes')
@@ -85,7 +85,7 @@ def editar_estudiante(request, id):
             estudiante.usuario.save()
 
             estudiante.matricula = matricula
-            estudiante.telefono = request.POST.get('telefono')
+            estudiante.telefono = request.POST.get('telefono', '')
             estudiante.save()
 
             return redirect('lista_estudiantes')
