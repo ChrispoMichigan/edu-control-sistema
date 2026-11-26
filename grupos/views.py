@@ -11,7 +11,7 @@ def lista_grupos(request):
     if request.user.role != 'ADMIN':
         return redirect('inicio')
 
-    grupos = Grupo.objects.all().order_by('nombre')
+    grupos = Grupo.objects.select_related('curso', 'profesor__usuario').order_by('nombre')
 
     return render(request, 'grupos/lista.html', {
         'grupos': grupos
